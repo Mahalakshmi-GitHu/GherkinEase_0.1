@@ -8,7 +8,7 @@ import streamlit as st
     pdf_display = f'<iframe src="data:application/pdf;base64,{base64_pdf}" width="700" height="1000" type="application/pdf"></iframe>'
     st.markdown(pdf_display, unsafe_allow_html=True)'''
 
-def display_keyword_guidelines():
+def show_keyword_guidelines():
     st.markdown("""
         <style>
         .gradient-text {
