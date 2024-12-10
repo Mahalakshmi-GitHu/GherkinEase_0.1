@@ -11,6 +11,15 @@ st.set_page_config(
     page_title="GherkinEase",
     page_icon="GE_logo.png"
 )
+# Custom CSS to reduce zoom to 75%
+zoom_css = """
+    <style>
+        body {
+            zoom: 75%;
+        }
+    </style>
+"""
+st.markdown(zoom_css, unsafe_allow_html=True)
 
 # CSS for background and logo positioning
 st.markdown("""
