@@ -100,6 +100,16 @@ def show_gherkin_scenario_builder():
         """,
         unsafe_allow_html=True
     )
+    # Add the scenario type options (DC or SC) below the title
+    st.markdown(
+        """
+        <h2 style="color: green; font-size: 20px;">
+            Build your Gherkin Scenarios below:
+            Choose DC or SC scenario types:
+        </h2>
+        """,
+        unsafe_allow_html=True
+    )
     
     # Put clear button at the bottom of the right column with specific styling
     with col2:
@@ -126,7 +136,7 @@ def show_gherkin_scenario_builder():
             reset_session_state()
 
         
-    st.write("Build your Gherkin scenarios below.")
+    #st.write("Build your Gherkin scenarios below.")
  
     if "scenario_type" not in st.session_state:
         st.session_state.scenario_type = "DC"
