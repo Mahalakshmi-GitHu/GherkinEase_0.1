@@ -95,6 +95,7 @@ def show_gherkin_scenario_builder():
         st.title("Gherkin Scenario Builder")
    
     # Put clear button in right column with specific styling
+    # Put clear button in the right column with specific styling
     with col2:
         st.markdown(
             """
@@ -105,12 +106,17 @@ def show_gherkin_scenario_builder():
                 margin-top: 20px;
                 background-color: #FF4B4B;
                 color: white;
+                font-size: 12px; /* Smaller font size */
+                padding: 4px 8px; /* Reduce padding for a smaller button */
+                width: auto; /* Adjust width automatically based on content */
+                border-radius: 5px; /* Optional: Add rounded corners */
+                height: 30px; /* Set button height */
             }
             </style>
             """,
             unsafe_allow_html=True
         )
-        if st.button("Clear", key="clear_button", type="secondary", use_container_width=True):
+        if st.button("Clear", key="clear_button", type="secondary", use_container_width=False):
             reset_session_state()
  
    
