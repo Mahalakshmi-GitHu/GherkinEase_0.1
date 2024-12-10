@@ -92,7 +92,14 @@ def show_gherkin_scenario_builder():
     
     # Put title in left column
     with col1:
-        st.title("Gherkin Scenario Builder")
+         st.markdown(
+        """
+        <h1 style="white-space: nowrap; margin-bottom: 0px;">
+            Gherkin Scenario Builder
+        </h1>
+        """,
+        unsafe_allow_html=True
+    )
     
     # Put clear button at the bottom of the right column with specific styling
     with col2:
