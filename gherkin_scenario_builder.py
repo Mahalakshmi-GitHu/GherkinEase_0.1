@@ -105,7 +105,6 @@ def show_gherkin_scenario_builder():
         """
         <h2 style="color: green; font-size: 20px;">
             Build your Gherkin Scenarios below:
-            Choose DC or SC scenario types:
         </h2>
         """,
         unsafe_allow_html=True
@@ -113,11 +112,10 @@ def show_gherkin_scenario_builder():
     
     # Put clear button at the bottom of the right column with specific styling
     with col2:
-        st.markdown("<div style='flex-grow: 1;'></div>", unsafe_allow_html=True)  # Spacer to push the button down
         st.markdown(
             """
             <style>
-            /* Style for Clear button */
+            /* Style for Clear button to position it on the left side */
             [data-testid="baseButton-secondary"].clear-button {
                 background-color: #FF4B4B;
                 color: white;
@@ -126,6 +124,8 @@ def show_gherkin_scenario_builder():
                 width: auto;
                 border-radius: 5px;
                 height: 30px;
+                float: left;  /* Align the button to the left */
+                margin-top: 20px;
             }
             </style>
             """,
