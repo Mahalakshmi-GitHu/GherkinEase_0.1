@@ -15,7 +15,7 @@ st.set_page_config(
 zoom_css = """
     <style>
         body {
-            zoom: 84%;
+            zoom: 82%;
         }
     </style>
 """
