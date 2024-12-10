@@ -8,12 +8,12 @@ import re
 from autocorrect import Speller
  
 def load_keywords():
-    df = pd.read_excel('Keyword Identified.xlsx', sheet_name='KEYWORDS', header=None)
+    df = pd.read_excel('Keyword Identified (2).xlsx', sheet_name='KEYWORDS', header=None)
     column_names = df.iloc[6].tolist()
     df = df.iloc[7:].reset_index(drop=True)
-    df.dropna(subset=[df.columns[1]], inplace=True)
+    df.dropna(subset=[df.columns[8]], inplace=True)
     df.columns = column_names
-    keywords_dict = df.set_index(df.columns[1]).T.to_dict('list')
+    keywords_dict = df.set_index(df.columns[8]).T.to_dict('list')
     return df, keywords_dict, column_names
 df, keywords_dict, column_names = load_keywords()
  
@@ -88,7 +88,7 @@ def reset_session_state():
 # Modified display functions to use session state
 def show_gherkin_scenario_builder():
     # Create a layout with two columns
-    col1, col2 = st.columns([6, 1])
+    col1, col2 = st.columns([6, 8])
  
     # Put title in left column
     with col1:
@@ -234,7 +234,6 @@ def show_gherkin_scenario_builder():
         if "sc_num_then" not in st.session_state:
             st.session_state.sc_num_then = 1
        
- 
         if "sc_then_statements" not in st.session_state:
             st.session_state.sc_then_statements = dict()
  
