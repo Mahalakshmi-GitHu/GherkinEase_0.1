@@ -94,32 +94,32 @@ def show_gherkin_scenario_builder():
     with col1:
         st.title("Gherkin Scenario Builder")
     
-    # Right column for buttons
+    # Put clear button at the bottom of the right column with specific styling
     with col2:
-        # Spacer to position buttons
-        st.markdown("<div style='flex-grow: 1;'></div>", unsafe_allow_html=True)
-        
-        # Download button
-        download_button = st.markdown(download_link(content, "gherkin_scenario.txt", "Download Gherkin Scenario"))
-        
-        # Clear button styled
-        st.markdown("""
+        st.markdown("<div style='flex-grow: 1;'></div>", unsafe_allow_html=True)  # Spacer to push the button down
+        st.markdown(
+            """
             <style>
-                .clear-button {
-                    background-color: #FF4B4B; 
-                    color: white; 
-                    font-size: 12px; 
-                    padding: 4px 8px; 
-                    border-radius: 5px; 
-                    height: 30px; 
-                }
+            /* Style for Clear button */
+            [data-testid="baseButton-secondary"].clear-button {
+                background-color: #FF4B4B;
+                color: white;
+                font-size: 12px;
+                padding: 4px 8px;
+                width: auto;
+                border-radius: 5px;
+                height: 30px;
+            }
             </style>
-            """, unsafe_allow_html=True)
-        
+            """,
+            unsafe_allow_html=True
+        )
+        st.markdown("<br><br><br>", unsafe_allow_html=True)  # Add spacing
         if st.button("Clear", key="clear_button", type="secondary", use_container_width=False):
             reset_session_state()
+
         
-        st.write("Build your Gherkin scenarios below.")
+    st.write("Build your Gherkin scenarios below.")
  
     if "scenario_type" not in st.session_state:
         st.session_state.scenario_type = "DC"
