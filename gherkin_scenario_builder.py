@@ -191,7 +191,7 @@ def show_gherkin_scenario_builder():
             st.session_state.dc_given_input_text[i] = st.text_input(
                 f"Given {i+1} (Type your keyword here):",
                 value= st.session_state.dc_given_input_text[i],
-                key=f"given_input_{i}"
+                key=f"given_input_text{i}"
             )
            
             # st.session_state.given_input_text[i] = autocorrect_input(st.session_state.given_input_text[i])
