@@ -80,9 +80,14 @@ def show_keyword_guidelines():
             <tr><td>%</td><td>percentage</td></tr>
             <tr><td>Electrical Energy</td><td>kilowatt hour</td></tr>
             <tr><td>Acceleration/Deceleration Rate</td><td>metre per second square</td></tr>
-            <tr><td>Time</td><td>seconds</td></tr>
+            <tr><td>Time</td><td>seconds/hour/days</td></tr>
             <tr><td>Distance</td><td>kilometre/metre</td></tr>
             <tr><td>Angle</td><td>degrees</td></tr>
+            <tr><td>Rate of change of acceleration/deceleration per second</td><td>g per second</td></tr>
+            <tr><td>Rotational speed</td><td>degree per second</td></tr>
+            <tr><td>Flow Rate</td><td>litre per minute</td></tr>
+            <tr><td>Fluid Level</td><td>litres</td></tr>
+            <tr><td>Load per area</td><td>watt per square metre</td></tr>
         </table>
     """, unsafe_allow_html=True)
  
