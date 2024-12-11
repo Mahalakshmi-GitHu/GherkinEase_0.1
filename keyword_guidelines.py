@@ -82,7 +82,7 @@ def show_keyword_guidelines():
             <tr><td>Acceleration/Deceleration Rate</td><td>metre per second square</td></tr>
             <tr><td>Time</td><td>seconds</td></tr>
             <tr><td>Distance</td><td>kilometre/metre</td></tr>
-            <tr><td>Angle</td><td>degree</td></tr>
+            <tr><td>Angle</td><td>degrees</td></tr>
         </table>
     """, unsafe_allow_html=True)
  
