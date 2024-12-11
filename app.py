@@ -5,7 +5,7 @@ from signal_details import show_signal_details
 from gherkin_guidelines import show_gherkin_guidelines
 from keyword_guidelines import show_keyword_guidelines
 
-
+password = st.secrets["general"]["password"]
 def check_password():
     """Returns `True` if the user has entered the correct password."""
     if "password" not in st.session_state:
