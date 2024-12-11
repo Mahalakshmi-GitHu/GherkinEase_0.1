@@ -70,19 +70,19 @@ def show_keyword_guidelines():
         <h3>Parameters and Units</h3>
         <table>
             <tr><th>Parameter</th><th>Unit</th></tr>
-            <tr><td>Voltage</td><td>Volt</td></tr>
-            <tr><td>Current</td><td>Ampere</td></tr>
-            <tr><td>Torque</td><td>Newton metre</td></tr>
+            <tr><td>Voltage</td><td>volt</td></tr>
+            <tr><td>Current</td><td>ampere</td></tr>
+            <tr><td>Torque</td><td>newton metre</td></tr>
             <tr><td>Speed</td><td>rpm/kph/mph</td></tr>
-            <tr><td>Power</td><td>Kilowatt</td></tr>
-            <tr><td>Pressure</td><td>Bar</td></tr>
-            <tr><td>Temperature</td><td>Degree Celsius</td></tr>
-            <tr><td>%</td><td>Percentage</td></tr>
-            <tr><td>Electrical Energy</td><td>Kilowatt hour</td></tr>
-            <tr><td>Acceleration/Deceleration Rate</td><td>Metre per second square</td></tr>
-            <tr><td>Time</td><td>Seconds</td></tr>
-            <tr><td>Distance</td><td>Kilometre/Metre</td></tr>
-            <tr><td>Angle</td><td>Degree</td></tr>
+            <tr><td>Power</td><td>kilowatt</td></tr>
+            <tr><td>Pressure</td><td>bar</td></tr>
+            <tr><td>Temperature</td><td>degree celsius</td></tr>
+            <tr><td>%</td><td>percentage</td></tr>
+            <tr><td>Electrical Energy</td><td>kilowatt hour</td></tr>
+            <tr><td>Acceleration/Deceleration Rate</td><td>metre per second square</td></tr>
+            <tr><td>Time</td><td>seconds</td></tr>
+            <tr><td>Distance</td><td>kilometre/metre</td></tr>
+            <tr><td>Angle</td><td>degree</td></tr>
         </table>
     """, unsafe_allow_html=True)
  
