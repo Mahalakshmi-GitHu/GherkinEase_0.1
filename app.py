@@ -6,6 +6,25 @@ from gherkin_guidelines import show_gherkin_guidelines
 from keyword_guidelines import show_keyword_guidelines
 
 
+def check_password():
+    """Returns `True` if the user has entered the correct password."""
+    if "password" not in st.session_state:
+        st.session_state["password"] = st.text_input("Password", type="password")
+    
+    # Check if the entered password matches the stored password
+    if st.session_state["password"] == st.secrets["general"]["password"]:
+        return True
+    else:
+        st.error("Password incorrect")
+        return False
+
+# Check if the user is authenticated
+if not check_password():
+    st.stop()  # Stop execution if the password is incorrect
+
+# Main content of your app goes here
+st.title("Welcome to My Streamlit App")
+st.write("This is a secure area of the app.")
 st.set_page_config(
     layout="wide",
     page_title="GherkinEase",
