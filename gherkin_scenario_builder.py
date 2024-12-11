@@ -394,9 +394,9 @@ def show_gherkin_scenario_builder():
         st.session_state.dc_gherkin_scenario = ""
         for i, given in enumerate(st.session_state.dc_given_statements):
             if i == 0:
-                st.session_state.dc_gherkin_scenario += format_gherkin_statement("Given", st.session_state.dc_given_statements[given]) + "\n"
+                st.session_state.dc_gherkin_scenario += format_gherkin_statement("Given", st.session_state.dc_given_statements[given], st.session_state.dc_given_input_text[i]) + "\n"
             else:
-                st.session_state.dc_gherkin_scenario += format_gherkin_statement("And", st.session_state.dc_given_statements[given]) + "\n"
+                st.session_state.dc_gherkin_scenario += format_gherkin_statement("And", st.session_state.dc_given_statements[given], st.session_state.dc_given_input_text[i]) + "\n"
         display_generated_scenario(st.session_state.dc_gherkin_scenario)
     else:
         # Generate Gherkin scenario
