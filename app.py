@@ -5,30 +5,44 @@ from signal_details import show_signal_details
 from gherkin_guidelines import show_gherkin_guidelines
 from keyword_guidelines import show_keyword_guidelines
 
-def check_password():
-    """Returns `True` if the user has entered the correct password."""
-    if "password" not in st.session_state:
-        st.session_state["password"] = st.text_input("Password", type="password")
-    
-    # Check if the entered password matches the stored password
-    if st.session_state["password"] == st.secrets["general"]["password"]:
-        return True
-    else:
-        st.error("Password incorrect")
-        return False
-
-# Check if the user is authenticated
-if not check_password():
-    st.stop()  # Stop execution if the password is incorrect
-
-# Main content of your app goes here
-st.title("Welcome to My Streamlit App")
-st.write("This is a secure area of the app.")
 st.set_page_config(
     layout="wide",
     page_title="GherkinEase",
     page_icon="GE_logo.png"
 )
+
+def check_password():
+    """Authenticates the user using a password stored in secrets.toml."""
+    # Store password status in session state
+    if "password_correct" not in st.session_state:
+        st.session_state["password_correct"] = False
+
+    # If password is already authenticated, return True
+    if st.session_state["password_correct"]:
+        return True
+
+    # Prompt the user to enter the password
+    password = st.text_input("Enter Password:", type="password")
+
+    # Validate password
+    if password:  # Check if input is not empty
+        if password == st.secrets["general"]["password"]:
+            st.session_state["password_correct"] = True
+            st.success("Password correct!")
+            return True
+        else:
+            st.error("Password incorrect. Please try again.")
+
+    return False
+
+
+# Authenticate the user
+if not check_password():
+    st.stop()  # Stop execution if authentication fails
+
+# App content after successful authentication
+st.write("Welcome to the secured app!")
+
 # Custom CSS to reduce zoom to 75%
 zoom_css = """
     <style>
