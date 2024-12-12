@@ -5,12 +5,6 @@ from signal_details import show_signal_details
 from gherkin_guidelines import show_gherkin_guidelines
 from keyword_guidelines import show_keyword_guidelines
 
-st.set_page_config(
-    layout="wide",
-    page_title="GherkinEase",
-    page_icon="GE_logo.png"
-)
-
 # Function to handle login logic
 def login_page():
     """Renders a login page with username and password authentication."""
@@ -59,7 +53,13 @@ if login_page():
     st.write("You are now logged in.")
 else:
     st.warning("Please login to access this app.")
-    
+
+st.set_page_config(
+    layout="wide",
+    page_title="GherkinEase",
+    page_icon="GE_logo.png"
+)
+
 '''
 def check_password():
     """Authenticates the user using a password stored in secrets.toml."""
