@@ -5,6 +5,11 @@ from signal_details import show_signal_details
 from gherkin_guidelines import show_gherkin_guidelines
 from keyword_guidelines import show_keyword_guidelines
 
+st.set_page_config(
+    page_title="Login Page",
+    page_icon="🔒",
+    layout="centered"
+)
 
 def login_page():
     """Display the login page with username and password fields."""
