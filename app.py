@@ -27,7 +27,7 @@ def check_password():
 
     # Validate password
     if password:  # Check if input is not empty
-        if password == st.secrets["general"]["password"]:
+        if password == st.secrets["credentials"]["password"]:
             st.session_state["password_correct"] = True
             st.success("Password correct!")
             return True
