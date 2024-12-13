@@ -46,8 +46,7 @@ if "authenticated" not in st.session_state:
 
 if not st.session_state["authenticated"]:
     login_page()  # Show login page
-else:
-    main_page()  # Show main page after login
+
 
 '''
 st.set_page_config(
