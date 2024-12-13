@@ -32,13 +32,13 @@ def login_page():
 
 # Create the main page content after login
 def main_page():
-    """Main content of the app after login."""
+    """Main content of the app after login.
     st.set_page_config(  # Apply GherkinEase config after login
         layout="wide",
         page_title="GherkinEase",
         page_icon="GE_logo.png"
     )
-    """Main content of the app after login."""
+    Main content of the app after login."""
     st.title("Welcome to GherkinEase!")
     st.write("You have successfully logged in to the secured app.")
     st.write("Here, you can access all the functionalities of GherkinEase.")
@@ -50,7 +50,9 @@ st.write(st.session_state)
 # Check if the user is authenticated
 if "authenticated" not in st.session_state:
     st.session_state["authenticated"] = False
-
+if "page" not in st.session_state:
+    st.session_state["page"] = "login"
+    
 # Show login page or main content based on authentication
 if not st.session_state["authenticated"]:
     login_page()  # Show the login page
