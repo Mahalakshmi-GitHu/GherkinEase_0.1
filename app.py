@@ -42,6 +42,10 @@ def main_page():
     st.title("Welcome to GherkinEase!")
     st.write("You have successfully logged in to the secured app.")
     st.write("Here, you can access all the functionalities of GherkinEase.")
+    # Print session state for debugging
+    st.write("### Current Session State:")
+    st.write(st.session_state)
+
 
 # Check if the user is authenticated
 if "authenticated" not in st.session_state:
