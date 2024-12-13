@@ -12,7 +12,7 @@ st.set_page_config(
 )
 
 
-def check_password():
+def login_page():
     """Authenticates the user using a password stored in secrets.toml."""
     # Store password status in session state
     if "password_correct" not in st.session_state:
@@ -34,15 +34,24 @@ def check_password():
         else:
             st.error("Password incorrect. Please try again.")
 
-    return False
+def main():
+    """Main content of the app after login."""
+    st.set_page_config(  # Apply GherkinEase config after login
+        layout="wide",
+        page_title="GherkinEase",
+        page_icon="GE_logo.png"
+    )
+    st.title("Welcome to GherkinEase!")
+    st.write("This is the main secured content of the app.")
 
+# Authentication check
+if "authenticated" not in st.session_state:
+    st.session_state["authenticated"] = False
 
-# Authenticate the user
-if not check_password():
-    st.stop()  # Stop execution if authentication fails
-
-# App content after successful authentication
-st.write("Welcome to the secured app!")
+if not st.session_state["authenticated"]:
+    login_page()
+else:
+    main()
 
 # Custom CSS to reduce zoom to 75%
 zoom_css = """
