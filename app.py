@@ -5,8 +5,12 @@ from signal_details import show_signal_details
 from gherkin_guidelines import show_gherkin_guidelines
 from keyword_guidelines import show_keyword_guidelines
 
-import streamlit as st
-
+st.set_page_config(
+    layout="centered",
+    page_title="Login Page",
+    page_icon="🔒"
+)
+'''
 # Create a login page
 def login_page():
     """Display the login page with username and password fields."""
@@ -47,7 +51,7 @@ if not st.session_state["authenticated"]:
     login_page()  # Show the login page
 else:
     main_page()  # Show the main content after login
-
+'''
 # Custom CSS to reduce zoom to 75%
 zoom_css = """
     <style>
