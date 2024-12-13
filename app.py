@@ -5,11 +5,50 @@ from signal_details import show_signal_details
 from gherkin_guidelines import show_gherkin_guidelines
 from keyword_guidelines import show_keyword_guidelines
 
+import streamlit as st
+
+# Set initial page configuration for the login page
 st.set_page_config(
-    layout="wide",
-    page_title="GherkinEase",
-    page_icon="GE_logo.png"
+    layout="centered",
+    page_title="Login Page",
+    page_icon="🔒"
 )
+
+# Create a login page
+def login_page():
+    """Display the login page with username and password fields."""
+    st.title("Login Page")
+    st.subheader("Please login to access the GherkinEase tool.")
+
+    # Input fields for username and password
+    password = st.text_input("Password", placeholder="Enter your password", type="password")
+
+    # Validate credentials
+    if st.button("Submit"):
+        # Check if username and password match
+        if password == st.secrets["general"]["password"]:
+            st.session_state["authenticated"] = True  # Set session state for authentication
+            st.success("Login successful! Redirecting...")
+            st.experimental_rerun()  # Rerun the app to show the main content
+        else:
+            st.error("Invalid username or password. Please try again.")
+
+# Create the main page content after login
+def main_page():
+    """Main content of the app after login."""
+    st.title("Welcome to GherkinEase!")
+    st.write("You have successfully logged in to the secured app.")
+    st.write("Here, you can access all the functionalities of GherkinEase.")
+
+# Check if the user is authenticated
+if "authenticated" not in st.session_state:
+    st.session_state["authenticated"] = False
+
+# Show login page or main content based on authentication
+if not st.session_state["authenticated"]:
+    login_page()  # Show the login page
+else:
+    main_page()  # Show the main content after login
 
 # Custom CSS to reduce zoom to 75%
 zoom_css = """
