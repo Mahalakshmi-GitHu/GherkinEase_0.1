@@ -4,11 +4,8 @@ from keyword_details import show_keyword_details
 from signal_details import show_signal_details
 from gherkin_guidelines import show_gherkin_guidelines
 from keyword_guidelines import show_keyword_guidelines
-st.set_page_config(
-    layout="wide",
-    page_title="GherkinEase",
-    page_icon="GE_logo.png"
-)
+
+
 def login_page():
     """Display the login page with username and password fields."""
     st.title("Login Page")
@@ -39,6 +36,12 @@ if not st.session_state["authenticated"]:
     login_page()
 else:
     main()
+
+st.set_page_config(
+    layout="wide",
+    page_title="GherkinEase",
+    page_icon="GE_logo.png"
+)
 
 '''
 # Function to handle login logic
