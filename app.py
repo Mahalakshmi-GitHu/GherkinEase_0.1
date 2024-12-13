@@ -4,12 +4,7 @@ from keyword_details import show_keyword_details
 from signal_details import show_signal_details
 from gherkin_guidelines import show_gherkin_guidelines
 from keyword_guidelines import show_keyword_guidelines
-   
-st.set_page_config(
-    layout="wide",
-    page_title="GherkinEase",
-    page_icon="GE_logo.png"
-)
+
 
 
 def login_page():
@@ -35,14 +30,13 @@ def login_page():
             st.error("Password incorrect. Please try again.")
 
 def main():
+   
     """Main content of the app after login."""
-    st.set_page_config(  # Apply GherkinEase config after login
-        layout="wide",
-        page_title="GherkinEase",
-        page_icon="GE_logo.png"
-    )
-    st.title("Welcome to GherkinEase!")
-    st.write("This is the main secured content of the app.")
+   st.set_page_config(
+    layout="wide",
+    page_title="GherkinEase",
+    page_icon="GE_logo.png"
+)
 
 # Authentication check
 if "authenticated" not in st.session_state:
