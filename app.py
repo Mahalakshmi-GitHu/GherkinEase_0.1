@@ -10,7 +10,14 @@ st.set_page_config(
     page_icon="🔒",
     layout="centered"
 )
-
+def main():
+    """Main content of the app after login."""
+    st.write("Welcome to the secured app!")
+                st.set_page_config(
+                layout="wide",
+                page_title="GherkinEase",
+                page_icon="GE_logo.png"
+            )
 def login_page():
     """Display the login page with username and password fields."""
     st.title("Login Page")
@@ -25,18 +32,12 @@ def login_page():
         if username == st.secrets["credentials"]["username"] and password == st.secrets["credentials"]["password"]:
             st.success("Login successful!")
             st.session_state["authenticated"] = True
-            st.set_page_config(
-                layout="wide",
-                page_title="GherkinEase",
-                page_icon="GE_logo.png"
-            )
             st.experimental_rerun()
+            st.main()
         else:
             st.error("Invalid username or password. Please try again.")
 
-def main():
-    """Main content of the app after login."""
-    st.write("Welcome to the secured app!")
+
 
 # Check authentication
 if "authenticated" not in st.session_state:
