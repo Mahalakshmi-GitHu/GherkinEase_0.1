@@ -5,6 +5,51 @@ from signal_details import show_signal_details
 from gherkin_guidelines import show_gherkin_guidelines
 from keyword_guidelines import show_keyword_guidelines
 
+import streamlit as st
+
+# Set page configuration at the top
+st.set_page_config(
+    page_title="GherkinEase",
+    page_icon="GE_logo.png",
+    layout="centered"
+)
+
+def login_page():
+    """Display the login page for user authentication."""
+    st.title("Login Page 🔒")
+    st.subheader("Please login to access the GherkinEase tool.")
+
+    # Input fields for username and password
+    username = st.text_input("Username", placeholder="Enter your username")
+    password = st.text_input("Password", placeholder="Enter your password", type="password")
+
+    # Validate credentials
+    if st.button("Login"):
+        if username == st.secrets["credentials"]["username"] and password == st.secrets["credentials"]["password"]:
+            st.success("Login successful! Redirecting...")
+            st.session_state["authenticated"] = True
+            st.experimental_rerun()  # Refresh the app to load the main page
+        else:
+            st.error("Invalid username or password. Please try again.")
+
+def main_page():
+    """Main GherkinEase page after successful login."""
+    st.title("GherkinEase 🚀")
+    st.subheader("Welcome to GherkinEase!")
+    st.write("This is your main workspace. Start building your Gherkin scenarios.")
+    # Add your GherkinEase-specific components here
+    st.write("Add your GherkinEase content here!")
+
+# Authentication check using session state
+if "authenticated" not in st.session_state:
+    st.session_state["authenticated"] = False
+
+if not st.session_state["authenticated"]:
+    login_page()  # Show login page
+else:
+    main_page()  # Show main page after login
+
+'''
 st.set_page_config(
     page_title="Login Page",
     page_icon="🔒",
@@ -47,7 +92,7 @@ st.set_page_config(
     page_title="GherkinEase",
     page_icon="GE_logo.png"
 )
-
+'''
 '''
 # Function to handle login logic
 def login_page():
