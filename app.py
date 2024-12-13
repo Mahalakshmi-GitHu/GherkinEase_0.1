@@ -5,47 +5,11 @@ from signal_details import show_signal_details
 from gherkin_guidelines import show_gherkin_guidelines
 from keyword_guidelines import show_keyword_guidelines
 
-
-
-def login_page():
-    """Authenticates the user using a password stored in secrets.toml."""
-    # Store password status in session state
-    if "password_correct" not in st.session_state:
-        st.session_state["password_correct"] = False
-
-    # If password is already authenticated, return True
-    if st.session_state["password_correct"]:
-        return True
-
-    # Prompt the user to enter the password
-    password = st.text_input("Enter Password:", type="password")
-
-    # Validate password
-    if password:  # Check if input is not empty
-        if password == st.secrets["credentials"]["password"]:
-            st.session_state["password_correct"] = True
-            st.success("Password correct!")
-            return True
-        else:
-            st.error("Password incorrect. Please try again.")
-
-def main():
-   
-    """Main content of the app after login."""
-   st.set_page_config(
+st.set_page_config(
     layout="wide",
     page_title="GherkinEase",
     page_icon="GE_logo.png"
 )
-
-# Authentication check
-if "authenticated" not in st.session_state:
-    st.session_state["authenticated"] = False
-
-if not st.session_state["authenticated"]:
-    login_page()
-else:
-    main()
 
 # Custom CSS to reduce zoom to 75%
 zoom_css = """
