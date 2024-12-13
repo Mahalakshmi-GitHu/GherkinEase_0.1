@@ -25,6 +25,11 @@ def login_page():
         if username == st.secrets["credentials"]["username"] and password == st.secrets["credentials"]["password"]:
             st.success("Login successful!")
             st.session_state["authenticated"] = True
+            st.set_page_config(
+                layout="wide",
+                page_title="GherkinEase",
+                page_icon="GE_logo.png"
+            )
             st.experimental_rerun()
         else:
             st.error("Invalid username or password. Please try again.")
@@ -42,11 +47,11 @@ if not st.session_state["authenticated"]:
 else:
     main()
 
-st.set_page_config(
-    layout="wide",
-    page_title="GherkinEase",
-    page_icon="GE_logo.png"
-)
+# st.set_page_config(
+#     layout="wide",
+#     page_title="GherkinEase",
+#     page_icon="GE_logo.png"
+# )
 '''
 # Function to handle login logic
 def login_page():
