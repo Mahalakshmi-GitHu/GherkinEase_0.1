@@ -10,7 +10,7 @@ st.set_page_config(
     page_title="GherkinEase", 
     page_icon="GE_logo.png"
 )
-'''
+
 # Create a login page
 def login_page():
     """Display the login page with username and password fields."""
@@ -32,11 +32,12 @@ def login_page():
 
 # Create the main page content after login
 def main_page():
-    st.set_page_config(
-    layout="centered",
-    page_title="Login Page",
-    page_icon="🔒"
-)
+    """Main content of the app after login."""
+    st.set_page_config(  # Apply GherkinEase config after login
+        layout="wide",
+        page_title="GherkinEase",
+        page_icon="GE_logo.png"
+    )
     """Main content of the app after login."""
     st.title("Welcome to GherkinEase!")
     st.write("You have successfully logged in to the secured app.")
@@ -51,7 +52,7 @@ if not st.session_state["authenticated"]:
     login_page()  # Show the login page
 else:
     main_page()  # Show the main content after login
-'''
+
 # Custom CSS to reduce zoom to 75%
 zoom_css = """
     <style>
