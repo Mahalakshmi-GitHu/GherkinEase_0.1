@@ -13,6 +13,8 @@ st.set_page_config(
 
 # Create a login page
 def login_page():
+    st.write("### Current Session State:")
+    st.write(st.session_state)
     """Display the login page with username and password fields."""
     st.title("Login Page")
     st.subheader("Please login to access the GherkinEase tool.")
@@ -32,6 +34,8 @@ def login_page():
 
 # Create the main page content after login
 def main_page():
+    st.write("### Current Session State:")
+    st.write(st.session_state)
     """Main content of the app after login.
     st.set_page_config(  # Apply GherkinEase config after login
         layout="wide",
