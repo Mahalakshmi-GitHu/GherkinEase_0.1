@@ -7,13 +7,6 @@ from keyword_guidelines import show_keyword_guidelines
 
 import streamlit as st
 
-# Set initial page configuration for the login page
-st.set_page_config(
-    layout="centered",
-    page_title="Login Page",
-    page_icon="🔒"
-)
-
 # Create a login page
 def login_page():
     """Display the login page with username and password fields."""
@@ -35,6 +28,11 @@ def login_page():
 
 # Create the main page content after login
 def main_page():
+    st.set_page_config(
+    layout="centered",
+    page_title="Login Page",
+    page_icon="🔒"
+)
     """Main content of the app after login."""
     st.title("Welcome to GherkinEase!")
     st.write("You have successfully logged in to the secured app.")
