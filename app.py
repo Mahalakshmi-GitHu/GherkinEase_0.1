@@ -6,9 +6,9 @@ from gherkin_guidelines import show_gherkin_guidelines
 from keyword_guidelines import show_keyword_guidelines
 
 st.set_page_config(
-    layout="centered",
-    page_title="Login Page",
-    page_icon="🔒"
+    layout="wide", 
+    page_title="GherkinEase", 
+    page_icon="GE_logo.png"
 )
 '''
 # Create a login page
