@@ -13,11 +13,10 @@ st.set_page_config(
 def main():
     """Main content of the app after login."""
     st.write("Welcome to the secured app!")
-                st.set_page_config(
-                layout="wide",
-                page_title="GherkinEase",
-                page_icon="GE_logo.png"
-            )
+    st.set_page_config(
+        layout="wide",
+        page_title="GherkinEase",
+        page_icon="GE_logo.png")
 def login_page():
     """Display the login page with username and password fields."""
     st.title("Login Page")
