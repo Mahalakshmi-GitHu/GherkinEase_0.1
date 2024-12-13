@@ -4,7 +4,43 @@ from keyword_details import show_keyword_details
 from signal_details import show_signal_details
 from gherkin_guidelines import show_gherkin_guidelines
 from keyword_guidelines import show_keyword_guidelines
+st.set_page_config(
+    layout="wide",
+    page_title="GherkinEase",
+    page_icon="GE_logo.png"
+)
+def login_page():
+    """Display the login page with username and password fields."""
+    st.title("Login Page")
+    st.subheader("Please login to access this app.")
 
+    # Input fields for username and password
+    username = st.text_input("Username", placeholder="Enter your username")
+    password = st.text_input("Password", placeholder="Enter your password", type="password")
+
+    # Validate credentials
+    if st.button("Login"):
+        if username == st.secrets["credentials"]["username"] and password == st.secrets["credentials"]["password"]:
+            st.success("Login successful!")
+            st.session_state["authenticated"] = True
+            st.experimental_rerun()
+        else:
+            st.error("Invalid username or password. Please try again.")
+
+def main():
+    """Main content of the app after login."""
+    st.write("Welcome to the secured app!")
+
+# Check authentication
+if "authenticated" not in st.session_state:
+    st.session_state["authenticated"] = False
+
+if not st.session_state["authenticated"]:
+    login_page()
+else:
+    main()
+
+'''
 # Function to handle login logic
 def login_page():
     """Renders a login page with username and password authentication."""
@@ -60,7 +96,7 @@ st.set_page_config(
     page_icon="GE_logo.png"
 )
 
-'''
+
 def check_password():
     """Authenticates the user using a password stored in secrets.toml."""
     # Store password status in session state
