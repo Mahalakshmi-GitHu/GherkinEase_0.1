@@ -10,15 +10,6 @@ st.set_page_config(
     page_title="GherkinEase", 
     page_icon="GE_logo.png"
 )
-import streamlit as st
-
-# Set page configuration
-st.set_page_config(
-    layout="wide",
-    page_title="GherkinEase",
-    page_icon="GE_logo.png"
-)
-
 def check_login():
     """Authenticates the user using username and password stored in secrets.toml."""
     # Initialize session state for authentication if it doesn't exist
