@@ -33,8 +33,6 @@ def check_password():
 # Authenticate the user
 if not check_password():
     st.stop()  # Stop execution if authentication fails
-# App content after successful authentication
-st.write("Welcome to the secured app!")
 
 # Custom CSS to reduce zoom to 75%
 zoom_css = """
