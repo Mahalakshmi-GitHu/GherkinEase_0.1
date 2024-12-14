@@ -11,25 +11,34 @@ st.set_page_config(
     page_icon="GE_logo.png"
 )
 
+
 def check_password():
     """Authenticates the user using a password stored in secrets.toml."""
-    # Store password status in session state
+    # Initialize session state for authentication if it doesn't exist
     if "password_correct" not in st.session_state:
         st.session_state["password_correct"] = False
-    # If password is already authenticated, return True
+
+    # If already authenticated, return True
     if st.session_state["password_correct"]:
         return True
-    # Prompt the user to enter the password
-    password = st.text_input("Enter Password:", type="password")
-    # Validate password
-    if password:  # Check if input is not empty
-        if password == st.secrets["credentials"]["password"]:
-            st.session_state["password_correct"] = True
-            st.success("Password correct!")
-            return True
-        else:
-            st.error("Password incorrect. Please try again.")
+
+    # Show the login form if not authenticated
+    with st.form("login_form", clear_on_submit=False):
+        st.title("Login Page")
+        password = st.text_input("Enter Password:", type="password")
+        submitted = st.form_submit_button("Login")
+
+        # Validate the password
+        if submitted:
+            if password == st.secrets["credentials"]["password"]:
+                st.session_state["password_correct"] = True
+                st.success("Login successful!")
+                st.experimental_rerun()
+            else:
+                st.error("Password incorrect. Please try again.")
+
     return False
+
 # Authenticate the user
 if not check_password():
     st.stop()  # Stop execution if authentication fails
