@@ -33,7 +33,7 @@ def check_password():
             if password == st.secrets["credentials"]["password"]:
                 st.session_state["password_correct"] = True
                 st.success("Login successful!")
-                st.experimental_rerun()
+                st.rerun()
             else:
                 st.error("Password incorrect. Please try again.")
 
