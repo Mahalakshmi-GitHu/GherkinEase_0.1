@@ -35,59 +35,7 @@ if not check_password():
     st.stop()  # Stop execution if authentication fails
 # App content after successful authentication
 st.write("Welcome to the secured app!")
-'''
-# Create a login page
-def login_page():
-    st.write("### Current Session State:")
-    st.write(st.session_state)
-    """Display the login page with username and password fields."""
-    st.title("Login Page")
-    st.subheader("Please login to access the GherkinEase tool.")
 
-    # Input fields for username and password
-    password = st.text_input("Password", placeholder="Enter your password", type="password")
-
-    # Validate credentials
-    if st.button("Submit"):
-        # Check if username and password match
-        if password == st.secrets["general"]["password"]:
-            st.session_state["authenticated"] = True  # Set session state for authentication
-            st.success("Login successful! Redirecting...")
-            st.experimental_rerun()  # Rerun the app to show the main content
-        else:
-            st.error("Invalid username or password. Please try again.")
-
-# Create the main page content after login
-def main_page():
-    st.write("### Current Session State:")
-    st.write(st.session_state)
-    """Main content of the app after login.
-    st.set_page_config(  # Apply GherkinEase config after login
-        layout="wide",
-        page_title="GherkinEase",
-        page_icon="GE_logo.png"
-    )
-    Main content of the app after login."""
-    st.title("Welcome to GherkinEase!")
-    st.write("You have successfully logged in to the secured app.")
-    st.write("Here, you can access all the functionalities of GherkinEase.")
-    
-# Print session state for debugging
-st.write("### Current Session State:")
-st.write(st.session_state)
-
-# Check if the user is authenticated
-if "authenticated" not in st.session_state:
-    st.session_state["authenticated"] = False
-if "page" not in st.session_state:
-    st.session_state["page"] = "login"
-    
-# Show login page or main content based on authentication
-if not st.session_state["authenticated"]:
-    login_page()  # Show the login page
-else:
-    main_page()  # Show the main content after login
-'''
 # Custom CSS to reduce zoom to 75%
 zoom_css = """
     <style>
