@@ -10,42 +10,37 @@ st.set_page_config(
     page_title="GherkinEase", 
     page_icon="GE_logo.png"
 )
-def check_login():
-    """Authenticates the user using username and password stored in secrets.toml."""
+
+def check_password():
+    """Authenticates the user using a password stored in secrets.toml."""
     # Initialize session state for authentication if it doesn't exist
-    if "authenticated" not in st.session_state:
-        st.session_state["authenticated"] = False
-
+    if "password_correct" not in st.session_state:
+        st.session_state["password_correct"] = False
+ 
     # If already authenticated, return True
-    if st.session_state["authenticated"]:
+    if st.session_state["password_correct"]:
         return True
-
+ 
     # Show the login form if not authenticated
     with st.form("login_form", clear_on_submit=False):
         st.title("Login Page")
-        username = st.text_input("Enter Username:")
         password = st.text_input("Enter Password:", type="password")
         submitted = st.form_submit_button("Login")
-
-        # Validate the username and password
+ 
+        # Validate the password
         if submitted:
-            if (
-                username == st.secrets["credentials"]["username"]
-                and password == st.secrets["credentials"]["password"]
-            ):
-                st.session_state["authenticated"] = True
-                st.session_state["username"] = username  # Store the username in session state
-                st.success(f"Login successful! Welcome, {username}!")
-                st.rerun()  # Reload the app after successful login
+            if password == st.secrets["credentials"]["password"]:
+                st.session_state["password_correct"] = True
+                st.success("Login successful!")
+                st.rerun()
             else:
-                st.error("Invalid username or password. Please try again.")
-
+                st.error("Password incorrect. Please try again.")
+ 
     return False
-
+ 
 # Authenticate the user
-if not check_login():
-    st.stop()  # Stop execution if authentication fail
-
+if not check_password():
+    st.stop()  # Stop execution if authentication fails
 
 # Custom CSS to reduce zoom to 75%
 zoom_css = """
