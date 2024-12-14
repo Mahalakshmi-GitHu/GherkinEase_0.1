@@ -11,8 +11,6 @@ st.set_page_config(
     page_icon="GE_logo.png"
 )
 
-st.write(st.secrets)
-
 def check_password():
     """Authenticates the user using a password stored in secrets.toml."""
     # Store password status in session state
