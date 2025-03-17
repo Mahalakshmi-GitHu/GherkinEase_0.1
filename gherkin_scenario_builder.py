@@ -1,7 +1,6 @@
 import base64
 import streamlit as st
 import pdfplumber
-import fitz
 import pandas as pd
 import textdistance
 import re
