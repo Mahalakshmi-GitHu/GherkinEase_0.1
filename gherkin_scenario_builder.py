@@ -34,12 +34,22 @@ def generate_gherkin_scenario(tags=None, example_table=None):
         scenario += example_table.to_string(index=False)
     return scenario
  
-def format_example_table(rows):
+"""def format_example_table(rows):
     column_widths = [max(len(str(item)) for item in col) for col in zip(*rows)]
     formatted_rows = []
     for row in rows:
         formatted_row = "|".join([f"{str(item).ljust(width)}" for item, width in zip(row, column_widths)])
         formatted_rows.append(f"|{formatted_row} |")
+    return formatted_rows"""
+
+def format_example_table(rows):
+    # Calculate maximum width for each column, treating None/empty as empty string
+    column_widths = [max(len(str(item or "")) for item in col) for col in zip(*rows)]
+    formatted_rows = []
+    for row in rows:
+        # Format each cell, trimming whitespace and handling None/empty values
+        formatted_row = "|".join([f"{str(item or '').strip().ljust(width)}" for item, width in zip(row, column_widths)])
+        formatted_rows.append(f"|{formatted_row}|")
     return formatted_rows
  
 def generate_download_content(gherkin_scenario, example_df=None):
@@ -192,32 +202,212 @@ def show_gherkin_scenario_builder():
                 value= st.session_state.dc_given_input_text[i],
                 key=f"given_input_text{i}"
             )
-           
-            # st.session_state.given_input_text[i] = autocorrect_input(st.session_state.given_input_text[i])
-            # st.write(f"Auto-corrected Given {i+1}: {st.session_state.given_input_text[i]}")
-           
-            # # Select box with preserved value
-            # st.session_state.given_selected_key = f"given_select_{i}"
-            # options = [""] + list(keywords_dict.keys())
-            # current_value = st.session_state.given_statements.get(given_select_key, "")
-            # current_index = options.index(current_value) if current_value in options else 0
- 
-            # Select box with preserved value
-            st.session_state.dc_given_selected_keys[i] = f"given_select_{i}"
+            typed_value = autocorrect_input(st.session_state.dc_given_input_text[i])
+
+            st.session_state.dc_given_selected_keys[i] = f"dc_given_select_{i}"
             options = [""] + list(keywords_dict.keys())
- 
- 
             current_value = st.session_state.dc_given_statements.get(st.session_state.dc_given_selected_keys[i], "")
             current_index = options.index(current_value) if current_value in options else 0
             st.session_state.dc_given_statements[st.session_state.dc_given_selected_keys[i]] = st.selectbox(
                 f"Given {i+1} (Or Select from keyword identified sheet):",
                 options,
                 index=current_index,
+                key=f"dc_given_select_{i}"
             )
-            st.write(st.session_state.dc_given_statements[st.session_state.dc_given_selected_keys[i]])
- 
- 
+            selected_value = st.session_state.dc_given_statements[st.session_state.dc_given_selected_keys[i]]
+            final_value = typed_value if typed_value.strip() else selected_value
+            st.write(f"Final Given {i+1}: {final_value}")
+
+        # Generate scenario
+        st.session_state.dc_gherkin_scenario = ""
+        for i in range(st.session_state.dc_num_given):
+            typed_value = autocorrect_input(st.session_state.dc_given_input_text[i])
+            selected_value = st.session_state.dc_given_statements.get(f"dc_given_select_{i}", "")
+            final_value = typed_value if typed_value.strip() else selected_value
+            if i == 0:
+                st.session_state.dc_gherkin_scenario += format_gherkin_statement("Given", final_value) + "\n"
+            else:
+                st.session_state.dc_gherkin_scenario += format_gherkin_statement("And", final_value) + "\n"
+        display_generated_scenario(st.session_state.dc_gherkin_scenario)
+
     elif st.session_state.scenario_type == "SC":
+        # Given initialization
+        if "sc_num_given" not in st.session_state:
+            st.session_state.sc_num_given = 1
+        if "sc_given_statements" not in st.session_state:
+            st.session_state.sc_given_statements = dict()
+        if "sc_given_selected_keys" not in st.session_state:
+            st.session_state.sc_given_selected_keys = [""] * st.session_state.sc_num_given
+        if "sc_given_input_text" not in st.session_state:
+            st.session_state.sc_given_input_text = [""] * st.session_state.sc_num_given
+
+        st.session_state.sc_num_given = st.number_input(
+            "Number of Given statements:",
+            min_value=1,
+            max_value=10,
+            value=st.session_state.sc_num_given,
+        )
+        current_length = len(st.session_state.sc_given_selected_keys)
+        if current_length != st.session_state.sc_num_given:
+            if current_length < st.session_state.sc_num_given:
+                st.session_state.sc_given_selected_keys.extend([""] * (st.session_state.sc_num_given - current_length))
+                st.session_state.sc_given_input_text.extend([""] * (st.session_state.sc_num_given - current_length))
+            else:
+                st.session_state.sc_given_selected_keys = st.session_state.sc_given_selected_keys[:st.session_state.sc_num_given]
+                st.session_state.sc_given_input_text = st.session_state.sc_given_input_text[:st.session_state.sc_num_given]
+
+        # When initialization
+        if "sc_num_when" not in st.session_state:
+            st.session_state.sc_num_when = 1
+        if "sc_when_statements" not in st.session_state:
+            st.session_state.sc_when_statements = dict()
+        if "sc_when_selected_keys" not in st.session_state:
+            st.session_state.sc_when_selected_keys = [""] * st.session_state.sc_num_when
+        if "sc_when_input_text" not in st.session_state:
+            st.session_state.sc_when_input_text = [""] * st.session_state.sc_num_when
+
+        st.session_state.sc_num_when = st.number_input(
+            "Number of When statements:",  # Fixed label typo
+            min_value=1,
+            max_value=10,
+            value=st.session_state.sc_num_when,
+            key="sc_num_when_input"
+        )
+        current_length = len(st.session_state.sc_when_selected_keys)
+        if current_length != st.session_state.sc_num_when:
+            if current_length < st.session_state.sc_num_when:
+                st.session_state.sc_when_selected_keys.extend([""] * (st.session_state.sc_num_when - current_length))
+                st.session_state.sc_when_input_text.extend([""] * (st.session_state.sc_num_when - current_length))
+            else:
+                st.session_state.sc_when_selected_keys = st.session_state.sc_when_selected_keys[:st.session_state.sc_num_when]
+                st.session_state.sc_when_input_text = st.session_state.sc_when_input_text[:st.session_state.sc_num_when]
+
+        # Then initialization
+        if "sc_num_then" not in st.session_state:
+            st.session_state.sc_num_then = 1
+        if "sc_then_statements" not in st.session_state:
+            st.session_state.sc_then_statements = dict()
+        if "sc_then_selected_keys" not in st.session_state:
+            st.session_state.sc_then_selected_keys = [""] * st.session_state.sc_num_then
+        if "sc_then_input_text" not in st.session_state:
+            st.session_state.sc_then_input_text = [""] * st.session_state.sc_num_then
+
+        st.session_state.sc_num_then = st.number_input(
+            "Number of Then statements:",
+            min_value=1,
+            max_value=10,
+            value=st.session_state.sc_num_then,
+        )
+        current_length = len(st.session_state.sc_then_selected_keys)
+        if current_length != st.session_state.sc_num_then:
+            if current_length < st.session_state.sc_num_then:
+                st.session_state.sc_then_selected_keys.extend([""] * (st.session_state.sc_num_then - current_length))
+                st.session_state.sc_then_input_text.extend([""] * (st.session_state.sc_num_then - current_length))
+            else:
+                st.session_state.sc_then_selected_keys = st.session_state.sc_then_selected_keys[:st.session_state.sc_num_then]
+                st.session_state.sc_then_input_text = st.session_state.sc_then_input_text[:st.session_state.sc_num_then]
+
+        # Given statements
+        for i in range(st.session_state.sc_num_given):
+            st.session_state.sc_given_input_text[i] = st.text_input(
+                f"Given {i+1} (Type your keyword here):",
+                value=st.session_state.sc_given_input_text[i],
+                key=f"sc_given_input_text_{i}"
+            )
+            typed_value = autocorrect_input(st.session_state.sc_given_input_text[i])
+
+            st.session_state.sc_given_selected_keys[i] = f"sc_given_select_{i}"
+            options = [""] + list(keywords_dict.keys())
+            current_value = st.session_state.sc_given_statements.get(st.session_state.sc_given_selected_keys[i], "")
+            current_index = options.index(current_value) if current_value in options else 0
+            st.session_state.sc_given_statements[st.session_state.sc_given_selected_keys[i]] = st.selectbox(
+                f"Given {i+1} (Or Select from keyword identified sheet):",
+                options,
+                index=current_index,
+                key=f"sc_given_select_{i}"
+            )
+            selected_value = st.session_state.sc_given_statements[st.session_state.sc_given_selected_keys[i]]
+            final_value = typed_value if typed_value.strip() else selected_value
+            st.write(f"Final Given {i+1}: {final_value}")
+
+        # When statements
+        for i in range(st.session_state.sc_num_when):
+            st.session_state.sc_when_input_text[i] = st.text_input(
+                f"When {i+1} (Type your keyword here):",
+                value=st.session_state.sc_when_input_text[i],
+                key=f"sc_when_input_text_{i}"
+            )
+            typed_value = autocorrect_input(st.session_state.sc_when_input_text[i])
+
+            st.session_state.sc_when_selected_keys[i] = f"sc_when_select_{i}"
+            options = [""] + list(keywords_dict.keys())
+            current_value = st.session_state.sc_when_statements.get(st.session_state.sc_when_selected_keys[i], "")
+            current_index = options.index(current_value) if current_value in options else 0
+            st.session_state.sc_when_statements[st.session_state.sc_when_selected_keys[i]] = st.selectbox(
+                f"When {i+1} (Or Select from keyword identified sheet):",
+                options,
+                index=current_index,
+                key=f"sc_when_select_{i}"
+            )
+            selected_value = st.session_state.sc_when_statements[st.session_state.sc_when_selected_keys[i]]
+            final_value = typed_value if typed_value.strip() else selected_value
+            st.write(f"Final When {i+1}: {final_value}")
+
+        # Then statements
+        for i in range(st.session_state.sc_num_then):
+            st.session_state.sc_then_input_text[i] = st.text_input(
+                f"Then {i+1} (Type your keyword here):",
+                value=st.session_state.sc_then_input_text[i],
+                key=f"sc_then_input_text_{i}"
+            )
+            typed_value = autocorrect_input(st.session_state.sc_then_input_text[i])
+
+            st.session_state.sc_then_selected_keys[i] = f"sc_then_select_{i}"
+            options = [""] + list(keywords_dict.keys())
+            current_value = st.session_state.sc_then_statements.get(st.session_state.sc_then_selected_keys[i], "")
+            current_index = options.index(current_value) if current_value in options else 0
+            st.session_state.sc_then_statements[st.session_state.sc_then_selected_keys[i]] = st.selectbox(
+                f"Then {i+1} (Or Select from keyword identified sheet):",
+                options,
+                index=current_index,
+                key=f"sc_then_select_{i}"
+            )
+            selected_value = st.session_state.sc_then_statements[st.session_state.sc_then_selected_keys[i]]
+            final_value = typed_value if typed_value.strip() else selected_value
+            st.write(f"Final Then {i+1}: {final_value}")
+
+        # Generate scenario
+        st.session_state.sc_gherkin_scenario = ""
+        for i in range(st.session_state.sc_num_given):
+            typed_value = autocorrect_input(st.session_state.sc_given_input_text[i])
+            selected_value = st.session_state.sc_given_statements.get(f"sc_given_select_{i}", "")
+            final_value = typed_value if typed_value.strip() else selected_value
+            if i == 0:
+                st.session_state.sc_gherkin_scenario += format_gherkin_statement("Given", final_value) + "\n"
+            else:
+                st.session_state.sc_gherkin_scenario += format_gherkin_statement("And", final_value) + "\n"
+
+        for i in range(st.session_state.sc_num_when):
+            typed_value = autocorrect_input(st.session_state.sc_when_input_text[i])
+            selected_value = st.session_state.sc_when_statements.get(f"sc_when_select_{i}", "")
+            final_value = typed_value if typed_value.strip() else selected_value
+            if i == 0:
+                st.session_state.sc_gherkin_scenario += format_gherkin_statement("When", final_value) + "\n"
+            else:
+                st.session_state.sc_gherkin_scenario += format_gherkin_statement("And", final_value) + "\n"
+
+        for i in range(st.session_state.sc_num_then):
+            typed_value = autocorrect_input(st.session_state.sc_then_input_text[i])
+            selected_value = st.session_state.sc_then_statements.get(f"sc_then_select_{i}", "")
+            final_value = typed_value if typed_value.strip() else selected_value
+            if i == 0:
+                st.session_state.sc_gherkin_scenario += format_gherkin_statement("Then", final_value) + "\n"
+            else:
+                st.session_state.sc_gherkin_scenario += format_gherkin_statement("And", final_value) + "\n"
+        display_generated_scenario(st.session_state.sc_gherkin_scenario)
+
+ 
+    """elif st.session_state.scenario_type == "SC":
         #initilaise the input fields in session state
         if "sc_num_given" not in st.session_state:
             st.session_state.sc_num_given = 1
@@ -315,7 +505,8 @@ def show_gherkin_scenario_builder():
                 # Truncate lists while preserving existing values
                 st.session_state.sc_when_selected_keys = st.session_state.sc_when_selected_keys[:st.session_state.sc_num_when]
                 st.session_state.sc_when_input_text = st.session_state.sc_when_input_text[:st.session_state.sc_num_when]
- 
+        
+
         #Handling Given Statements fields
         for i in range(st.session_state.sc_num_given):
             st.session_state.sc_given_input_text[i] = st.text_input(
@@ -323,7 +514,7 @@ def show_gherkin_scenario_builder():
                 value= st.session_state.sc_given_input_text[i],
                 key=f"given_input_{i}"
             )
- 
+            typed_value = autocorrect_input(st.session_state.sc_given_input_text[i])
             # st.session_state.given_input_text[i] = autocorrect_input(st.session_state.given_input_text[i])
             # st.write(f"Auto-corrected Given {i+1}: {st.session_state.given_input_text[i]}")
  
@@ -349,7 +540,7 @@ def show_gherkin_scenario_builder():
                 key=f"When_input_{i}"
             )
  
- 
+
            
             # Select box with preserved value
             st.session_state.sc_when_selected_keys[i] = f"When_select_{i}"
@@ -385,10 +576,10 @@ def show_gherkin_scenario_builder():
                 options,
                 index = then_current_index,
                 key=f"Then {i+1} (Or Select from keyword identified sheet):",
-            )
+            )"""
            
  
-    if st.session_state.scenario_type == "DC":
+    """if st.session_state.scenario_type == "DC":
         # Generate Gherkin scenario
         st.session_state.dc_gherkin_scenario = ""
         for i, given in enumerate(st.session_state.dc_given_statements):
@@ -419,9 +610,9 @@ def show_gherkin_scenario_builder():
             else:
                 st.session_state.sc_gherkin_scenario += format_gherkin_statement("And", st.session_state.sc_then_statements[then]) + "\n"
         display_generated_scenario(st.session_state.sc_gherkin_scenario)
- 
+ """
    
- 
+""" 
 def display_generated_scenario(gherkin_scenario):
     st.session_state.gherkin_scenario = gherkin_scenario
     st.subheader("Generated Gherkin Scenario")
@@ -503,4 +694,148 @@ def display_generated_scenario(gherkin_scenario):
         # Generate download content and link
         content = generate_download_content(st.session_state.gherkin_scenario, download_df)
         download_link_html = download_link(content, "gherkin_scenario.txt", "Download Gherkin Scenario")
+        st.markdown(download_link_html, unsafe_allow_html=True)"""
+    
+def display_generated_scenario(gherkin_scenario):
+    st.session_state.gherkin_scenario = gherkin_scenario
+    st.subheader("Generated Gherkin Scenario")
+    st.code(st.session_state.gherkin_scenario, language='gherkin')
+    
+    tags = [tag.strip() for tag in re.findall(r'<(.*?)>', st.session_state.gherkin_scenario)]
+    tags = re.findall(r'<(.*?)>', st.session_state.gherkin_scenario)
+    st.write("Extracted tags:", tags)  # Debug to confirm
+
+    if tags:
+        # Default num_cols to len(tags) to include all extracted tags
+        num_cols = st.number_input(
+            "Number of Columns in Example Table:",
+            min_value=1,
+            max_value=len(tags),
+            value=len(tags),  # Default to all tags
+            key="example_num_cols_input"
+        )
+        
+        # Default num_rows to 1, persist user changes
+        if "example_num_rows" not in st.session_state:
+            st.session_state.example_num_rows = 1
+        num_rows = st.number_input(
+            "Number of Rows in Example Table:",
+            min_value=1,
+            value=st.session_state.example_num_rows,
+            key="example_num_rows_input"
+        )
+        st.session_state.example_num_rows = num_rows
+
+        # Initialize or update example_df with all tags up to num_cols
+        if ('example_df' not in st.session_state or
+            st.session_state.get('prev_tags', []) != tags):
+            st.session_state.example_df = pd.DataFrame(
+                columns=tags[:num_cols],  # Use tags directly
+                index=range(num_rows)
+            )
+            st.session_state.prev_tags = tags
+        else:
+            current_df = st.session_state.example_df
+            # Only adjust if num_cols or tags differ
+            if len(current_df.columns) != num_cols or list(current_df.columns) != tags[:num_cols]:
+                # Preserve existing data where possible
+                new_df = pd.DataFrame(columns=tags[:num_cols], index=range(num_rows))
+                for col in current_df.columns:
+                    if col in new_df.columns:
+                        new_df[col] = current_df[col].reindex(range(num_rows)).fillna("")
+                st.session_state.example_df = new_df
+            elif len(current_df) != num_rows:
+                # Adjust rows without changing columns
+                if num_rows > len(current_df):
+                    new_rows = pd.DataFrame(
+                        columns=current_df.columns,
+                        index=range(len(current_df), num_rows)
+                    )
+                    st.session_state.example_df = pd.concat([current_df, new_rows])
+                else:
+                    st.session_state.example_df = current_df.iloc[:num_rows]
+
+        st.write("Example Table:")
+        edited_df = st.data_editor(
+            st.session_state.example_df,
+            num_rows="dynamic",
+            key=f"example_table_{len(tags)}"
+        )
+        st.session_state.example_df = edited_df
+
+        download_df = edited_df.copy()
+        content = generate_download_content(st.session_state.gherkin_scenario, download_df)
+        download_link_html = download_link(content, "gherkin_scenario.txt", "Download Gherkin Scenario")
         st.markdown(download_link_html, unsafe_allow_html=True)
+        
+"""
+def display_generated_scenario(gherkin_scenario):
+    st.session_state.gherkin_scenario = gherkin_scenario
+    st.subheader("Generated Gherkin Scenario")
+    st.code(st.session_state.gherkin_scenario, language='gherkin')
+    
+    tags = [tag.strip() for tag in re.findall(r'<(.*?)>', st.session_state.gherkin_scenario)]
+    st.write("Extracted tags:", tags)  # Debug to confirm
+
+    if tags:
+        # Default num_cols to len(tags) to include all extracted tags
+        num_cols = st.number_input(
+            "Number of Columns in Example Table:",
+            min_value=1,
+            max_value=len(tags),
+            value=len(tags),  # Default to all tags
+            key="example_num_cols_input"
+        )
+        
+        # Default num_rows to len(tags), persist user changes
+        if "example_num_rows" not in st.session_state:
+            st.session_state.example_num_rows = len(tags)  # Changed from 1 to len(tags)
+        num_rows = st.number_input(
+            "Number of Rows in Example Table:",
+            min_value=1,
+            value=st.session_state.example_num_rows,
+            key="example_num_rows_input"
+        )
+        st.session_state.example_num_rows = num_rows
+
+        # Initialize example_df only if it doesn’t exist
+        if 'example_df' not in st.session_state:
+            st.session_state.example_df = pd.DataFrame(
+                columns=tags[:num_cols],
+                index=range(num_rows)
+            )
+            st.session_state.prev_tags = tags
+
+        # Display and capture edits first
+        st.write("Example Table:")
+        edited_df = st.data_editor(
+            st.session_state.example_df,
+            num_rows="dynamic",
+            key=f"example_table_{len(tags)}"
+        )
+
+        # Update session state with edits immediately
+        st.session_state.example_df = edited_df
+
+        # Adjust columns or rows only if necessary, preserving edits
+        if st.session_state.get('prev_tags', []) != tags or len(edited_df.columns) != num_cols:
+            new_df = pd.DataFrame(columns=tags[:num_cols], index=range(num_rows))
+            for col in edited_df.columns:
+                if col in new_df.columns:
+                    new_df[col] = edited_df[col].reindex(range(num_rows)).fillna("")
+            st.session_state.example_df = new_df
+            st.session_state.prev_tags = tags
+        elif len(edited_df) != num_rows:
+            if num_rows > len(edited_df):
+                new_rows = pd.DataFrame(
+                    columns=edited_df.columns,
+                    index=range(len(edited_df), num_rows)
+                )
+                st.session_state.example_df = pd.concat([edited_df, new_rows])
+            else:
+                st.session_state.example_df = edited_df.iloc[:num_rows]
+
+        download_df = st.session_state.example_df.copy()
+        content = generate_download_content(st.session_state.gherkin_scenario, download_df)
+        download_link_html = download_link(content, "gherkin_scenario.txt", "Download Gherkin Scenario")
+        st.markdown(download_link_html, unsafe_allow_html=True)"""
