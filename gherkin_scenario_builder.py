@@ -835,6 +835,18 @@ def display_generated_scenario(gherkin_scenario):
             else:
                 st.session_state.example_df = edited_df.iloc[:num_rows]
 
+        # Prepare download_df with original tags
+        download_df = st.session_state.example_df.copy()
+        download_df.columns = tags[:num_cols]  # Use original tags without suffixes
+    else:
+        # No tags, so no table; set download_df to None
+        download_df = None
+
+    # Generate download content and link, always available
+    content = generate_download_content(st.session_state.gherkin_scenario, download_df)
+    download_link_html = download_link(content, "gherkin_scenario.txt", "Download Gherkin Scenario")
+    st.markdown(download_link_html, unsafe_allow_html=True)
+
         download_df = st.session_state.example_df.copy()
         content = generate_download_content(st.session_state.gherkin_scenario, download_df)
         download_link_html = download_link(content, "gherkin_scenario.txt", "Download Gherkin Scenario")
