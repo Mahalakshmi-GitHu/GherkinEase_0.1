@@ -762,92 +762,11 @@ def display_generated_scenario(gherkin_scenario):
             key=f"example_table_{len(tags)}"
         )
         st.session_state.example_df = edited_df
-
         download_df = edited_df.copy()
-        content = generate_download_content(st.session_state.gherkin_scenario, download_df)
-        download_link_html = download_link(content, "gherkin_scenario.txt", "Download Gherkin Scenario")
-        st.markdown(download_link_html, unsafe_allow_html=True)
-        
-"""
-def display_generated_scenario(gherkin_scenario):
-    st.session_state.gherkin_scenario = gherkin_scenario
-    st.subheader("Generated Gherkin Scenario")
-    st.code(st.session_state.gherkin_scenario, language='gherkin')
-    
-    tags = [tag.strip() for tag in re.findall(r'<(.*?)>', st.session_state.gherkin_scenario)]
-    st.write("Extracted tags:", tags)  # Debug to confirm
-
-    if tags:
-        # Default num_cols to len(tags) to include all extracted tags
-        num_cols = st.number_input(
-            "Number of Columns in Example Table:",
-            min_value=1,
-            max_value=len(tags),
-            value=len(tags),  # Default to all tags
-            key="example_num_cols_input"
-        )
-        
-        # Default num_rows to len(tags), persist user changes
-        if "example_num_rows" not in st.session_state:
-            st.session_state.example_num_rows = len(tags)  # Changed from 1 to len(tags)
-        num_rows = st.number_input(
-            "Number of Rows in Example Table:",
-            min_value=1,
-            value=st.session_state.example_num_rows,
-            key="example_num_rows_input"
-        )
-        st.session_state.example_num_rows = num_rows
-
-        # Initialize example_df only if it doesn’t exist
-        if 'example_df' not in st.session_state:
-            st.session_state.example_df = pd.DataFrame(
-                columns=tags[:num_cols],
-                index=range(num_rows)
-            )
-            st.session_state.prev_tags = tags
-
-        # Display and capture edits first
-        st.write("Example Table:")
-        edited_df = st.data_editor(
-            st.session_state.example_df,
-            num_rows="dynamic",
-            key=f"example_table_{len(tags)}"
-        )
-
-        # Update session state with edits immediately
-        st.session_state.example_df = edited_df
-
-        # Adjust columns or rows only if necessary, preserving edits
-        if st.session_state.get('prev_tags', []) != tags or len(edited_df.columns) != num_cols:
-            new_df = pd.DataFrame(columns=tags[:num_cols], index=range(num_rows))
-            for col in edited_df.columns:
-                if col in new_df.columns:
-                    new_df[col] = edited_df[col].reindex(range(num_rows)).fillna("")
-            st.session_state.example_df = new_df
-            st.session_state.prev_tags = tags
-        elif len(edited_df) != num_rows:
-            if num_rows > len(edited_df):
-                new_rows = pd.DataFrame(
-                    columns=edited_df.columns,
-                    index=range(len(edited_df), num_rows)
-                )
-                st.session_state.example_df = pd.concat([edited_df, new_rows])
-            else:
-                st.session_state.example_df = edited_df.iloc[:num_rows]
-
-        # Prepare download_df with original tags
-        download_df = st.session_state.example_df.copy()
-        download_df.columns = tags[:num_cols]  # Use original tags without suffixes
     else:
-        # No tags, so no table; set download_df to None
         download_df = None
-
-    # Generate download content and link, always available
+     
     content = generate_download_content(st.session_state.gherkin_scenario, download_df)
     download_link_html = download_link(content, "gherkin_scenario.txt", "Download Gherkin Scenario")
     st.markdown(download_link_html, unsafe_allow_html=True)
 
-        download_df = st.session_state.example_df.copy()
-        content = generate_download_content(st.session_state.gherkin_scenario, download_df)
-        download_link_html = download_link(content, "gherkin_scenario.txt", "Download Gherkin Scenario")
-        st.markdown(download_link_html, unsafe_allow_html=True)"""
