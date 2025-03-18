@@ -417,64 +417,73 @@ def display_generated_scenario(gherkin_scenario):
     st.write("Extracted tags:", tags)  # Debug to confirm
 
     if tags:
-        # Default num_cols to len(tags) to include all extracted tags
-        num_cols = st.number_input(
-            "Number of Columns in Example Table:",
-            min_value=1,
-            max_value=len(tags),
-            value=len(tags),  # Default to all tags
-            key="example_num_cols_input"
-        )
-        
-        # Default num_rows to 1, persist user changes
-        if "example_num_rows" not in st.session_state:
-            st.session_state.example_num_rows = 1
-        num_rows = st.number_input(
-            "Number of Rows in Example Table:",
-            min_value=1,
-            value=st.session_state.example_num_rows,
-            key="example_num_rows_input"
-        )
-        st.session_state.example_num_rows = num_rows
-
-        # Initialize or update example_df with all tags up to num_cols
-        if ('example_df' not in st.session_state or
-            st.session_state.get('prev_tags', []) != tags):
-            st.session_state.example_df = pd.DataFrame(
-                columns=tags[:num_cols],  # Use tags directly
-                index=range(num_rows)
+        # Use a form to prevent automatic reruns on widget interaction
+        with st.form(key="table_form"):
+            # Default num_cols to len(tags) to include all extracted tags
+            num_cols = st.number_input(
+                "Number of Columns in Example Table:",
+                min_value=1,
+                max_value=len(tags),
+                value=len(tags),  # Default to all tags
+                key="example_num_cols_input"
             )
-            st.session_state.prev_tags = tags
-        else:
-            current_df = st.session_state.example_df
-            # Only adjust if num_cols or tags differ
-            if len(current_df.columns) != num_cols or list(current_df.columns) != tags[:num_cols]:
-                # Preserve existing data where possible
-                new_df = pd.DataFrame(columns=tags[:num_cols], index=range(num_rows))
-                for col in current_df.columns:
-                    if col in new_df.columns:
-                        new_df[col] = current_df[col].reindex(range(num_rows)).fillna("")
-                st.session_state.example_df = new_df
-            elif len(current_df) != num_rows:
-                # Adjust rows without changing columns
-                if num_rows > len(current_df):
-                    new_rows = pd.DataFrame(
-                        columns=current_df.columns,
-                        index=range(len(current_df), num_rows)
-                    )
-                    st.session_state.example_df = pd.concat([current_df, new_rows])
-                else:
-                    st.session_state.example_df = current_df.iloc[:num_rows]
+            
+            # Default num_rows to 1, persist user changes
+            if "example_num_rows" not in st.session_state:
+                st.session_state.example_num_rows = 1
+            num_rows = st.number_input(
+                "Number of Rows in Example Table:",
+                min_value=1,
+                value=st.session_state.example_num_rows,
+                key="example_num_rows_input"
+            )
+            st.session_state.example_num_rows = num_rows
 
-        st.write("Example Table:")
-        edited_df = st.data_editor(
-            st.session_state.example_df,
-            num_rows="dynamic",
-            key=f"example_table_{len(tags)}"
-        )
-        st.session_state.example_df = edited_df
+            # Initialize or update example_df with all tags up to num_cols
+            if ('example_df' not in st.session_state or
+                st.session_state.get('prev_tags', []) != tags):
+                st.session_state.example_df = pd.DataFrame(
+                    columns=tags[:num_cols],  # Use tags directly
+                    index=range(num_rows)
+                )
+                st.session_state.prev_tags = tags
+            else:
+                current_df = st.session_state.example_df
+                # Only adjust if num_cols or tags differ
+                if len(current_df.columns) != num_cols or list(current_df.columns) != tags[:num_cols]:
+                    # Preserve existing data where possible
+                    new_df = pd.DataFrame(columns=tags[:num_cols], index=range(num_rows))
+                    for col in current_df.columns:
+                        if col in new_df.columns:
+                            new_df[col] = current_df[col].reindex(range(num_rows)).fillna("")
+                    st.session_state.example_df = new_df
+                elif len(current_df) != num_rows:
+                    # Adjust rows without changing columns
+                    if num_rows > len(current_df):
+                        new_rows = pd.DataFrame(
+                            columns=current_df.columns,
+                            index=range(len(current_df), num_rows)
+                        )
+                        st.session_state.example_df = pd.concat([current_df, new_rows])
+                    else:
+                        st.session_state.example_df = current_df.iloc[:num_rows]
 
-        download_df = edited_df.copy()
+            st.write("Example Table:")
+            edited_df = st.data_editor(
+                st.session_state.example_df,
+                num_rows="dynamic",
+                key=f"example_table_{len(tags)}"
+            )
+
+            # Submit button to apply changes
+            submit_button = st.form_submit_button(label="Apply Changes")
+
+            if submit_button:
+                st.session_state.example_df = edited_df
+                download_df = edited_df.copy()
+            else:
+                # Use current state if no submit
+                download_df = st.session_state.example_df.copy() if 'example_df' in st.session_state else None
     else:
         download_df = None
 
